@@ -14,30 +14,61 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.todo.domain.Todo
+import com.example.todo.ui.viewmodels.TodosListViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.todo.ui.viewmodels.TodoListUiState
+import androidx.compose.runtime.getValue
 
 @Composable
-fun TodoListPage(modifier: Modifier = Modifier) {
-    val todos = listOf(
-        Todo(id = "123", text = "Купить пива", done = false),
-        Todo(id = "1234", text = "Купить чипсов", done = true),
-        Todo(id = "12345", text = "Оплатить интернет", done = true),
-        Todo(id = "123456", text = "Сделать РВП", done = false),
-    )
+fun TodoListPage(
+    modifier: Modifier = Modifier,
+    todoViewModel: TodosListViewModel = viewModel(),
+) {
+    val uiState by todoViewModel.uiState.collectAsState()
+//    val todos = listOf(
+//        Todo(id = "123", text = "Купить пива", done = false),
+//        Todo(id = "1234", text = "Купить чипсов", done = true),
+//        Todo(id = "12345", text = "Оплатить интернет", done = true),
+//        Todo(id = "123456", text = "Сделать РВП", done = false),
+//    )
 
-    Scaffold(topBar = { AppBar() }) { innerPadding ->
-        LazyColumn(
-            modifier = modifier.padding(
-                innerPadding
-            )
-        ) {
-            items(todos.size) { index ->
-                val todo = todos[index]
-                TodoTile(todo = todo, onDoneChanged = {})
+    Scaffold(
+        topBar = { AppBar() },
+        floatingActionButton = { AddTodoFAB(onClick = {}) },
+    ) { innerPadding ->
+
+        when (uiState) {
+            is TodoListUiState.Loading -> {
+                // Показать индикатор загрузки
+                Loading()
+            }
+            is TodoListUiState.Loaded -> {
+                val todos = (uiState as TodoListUiState.Loaded).todos
+                // Показать список задач
+                LazyColumn(
+                    modifier = modifier.padding(
+                        innerPadding
+                    )
+                ) {
+                    items(todos.size) { index ->
+                        val todo = todos[index]
+                        TodoTile(todo = todo, onDoneChanged = {})
+                    }
+                    item {
+                        AddTodoTile()
+                    }
+                }
+            }
+            is TodoListUiState.Error -> {
+                // Показать сообщение об ошибке
+                val message = (uiState as TodoListUiState.Error).message
+                Text(text = message)
             }
         }
+
     }
 }
 
@@ -51,29 +82,24 @@ fun AppBar(
     onVisibleChanged: (Boolean) -> Unit = {},
 ) {
 //    val iconButton =
-    TopAppBar(
-        title = {
-            Column {
-                Text("Мои дела")
-                Text("Выполнено - $doneTasks", style = MaterialTheme.typography.bodySmall)
-            }
-        },
-        actions = {
-            if (visible) {
-                IconButton(onClick = { onVisibleChanged(false) }) {
-                    Icon(
-                        Icons.Filled.Visibility,
-                        null
-                    )
-                }
-            } else IconButton(onClick = { onVisibleChanged(true) }) {
+    TopAppBar(title = {
+        Column {
+            Text("Мои дела")
+            Text("Выполнено - $doneTasks", style = MaterialTheme.typography.bodySmall)
+        }
+    }, actions = {
+        if (visible) {
+            IconButton(onClick = { onVisibleChanged(false) }) {
                 Icon(
-                    Icons.Filled.VisibilityOff,
-                    null
+                    Icons.Filled.Visibility, null
                 )
             }
-        },
-        modifier = modifier
+        } else IconButton(onClick = { onVisibleChanged(true) }) {
+            Icon(
+                Icons.Filled.VisibilityOff, null
+            )
+        }
+    }, modifier = modifier
     )
 }
 

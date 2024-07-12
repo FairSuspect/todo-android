@@ -1,28 +1,30 @@
 package com.example.todo.data
 
-import com.example.todo.di.modules.RemoteScope
+import com.example.todo.di.modules.DatabaseScope
 import com.example.todo.domain.Todo
 import javax.inject.Inject
-@RemoteScope
-class TodoRemoteDataSource @Inject constructor() : TodoDataSource {
+@DatabaseScope
+class TodoLocalDataSource @Inject constructor(private val db: AppDatabase) : TodoDataSource {
+
+
     override suspend fun createTodo(todo: Todo) {
-        TODO("Not yet implemented")
+        return db.todoDao().createTodo(todo)
     }
 
     override suspend fun updateTodo(todo: Todo) {
-        TODO("Not yet implemented")
+        return db.todoDao().updateTodo(todo)
     }
 
     override suspend fun deleteTodo(todo: Todo) {
-        TODO("Not yet implemented")
+        return db.todoDao().deleteTodo(todo)
     }
 
     override suspend fun getAllTodos(): List<Todo> {
-        return RetrofitClient.todoApi.getTodos()
+        return  db.todoDao().getAllTodos()
     }
 
     override suspend fun getTodo(id: String): Todo {
-        TODO("Not yet implemented")
+        return  db.todoDao().getTodo(id)
     }
 
     override suspend fun updateAllTodos(remoteTodos: List<Todo>) {

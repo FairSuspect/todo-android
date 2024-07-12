@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Todo</string>
+    <string name="createTask">Создать задачу</string>
 </resources>
