@@ -29,8 +29,17 @@ fun TodoListPage(
     todoViewModel: TodosListViewModel = viewModel(),
 ) {
     val uiState by todoViewModel.uiState.collectAsState()
+    val doneTasks = (uiState as? TodoListUiState.Loaded)?.todos?.count { it.done } ?: 0
     Scaffold(
-        topBar = { AppBar() },
+        topBar = {
+            AppBar(
+                doneTasks = doneTasks,
+                visible = if (uiState.let { it is TodoListUiState.Loaded })
+                    (uiState as TodoListUiState.Loaded).filterState == TodoListUiState.FilterState.ALL
+                else false,
+                onVisibleChanged = { todoViewModel.onVisibilityChanged(it) }
+            )
+        },
         floatingActionButton = {
             AddTodoFAB(onClick = {
                 todoViewModel.createRandomTodo()
@@ -45,18 +54,21 @@ fun TodoListPage(
             }
 
             is TodoListUiState.Loaded -> {
-                val todos = (uiState as TodoListUiState.Loaded).todos
+                val loadedState = uiState as TodoListUiState.Loaded
+                val todos = loadedState.todos
+                val filteredTodos = todos.filter(loadedState.filterState.filter)
                 // Показать список задач
                 LazyColumn(
                     modifier = modifier.padding(
                         innerPadding
                     )
                 ) {
-                    items(todos.size) { index ->
-                        val todo = todos[index]
-                        TodoTile(todo = todo, onDoneChanged = {
-                            todoViewModel.onChecked(todo, it)
-                        },
+                    items(filteredTodos.size) { index ->
+                        val todo = filteredTodos[index]
+                        TodoTile(todo = todo,
+                            onDoneChanged = {
+                                todoViewModel.onChecked(todo, it)
+                            },
                             onDelete = {
                                 todoViewModel.deleteTodo(todo)
                             }
@@ -73,7 +85,6 @@ fun TodoListPage(
             is TodoListUiState.Error -> {
                 // Показать сообщение об ошибке
                 val message = (uiState as TodoListUiState.Error).message
-                ///
                 Column {
                     Icon(
                         imageVector = Icons.Outlined.Error,

@@ -93,4 +93,12 @@ class TodosListViewModel @Inject constructor(private val todoRepository: TodoRep
             }
         }
     }
+
+    fun onVisibilityChanged(visible: Boolean) {
+        if(_uiState.value !is TodoListUiState.Loaded)
+            return
+        val loadedState = _uiState.value as TodoListUiState.Loaded
+
+        _uiState.value = loadedState.copy(filterState = if(visible) TodoListUiState.FilterState.ALL else TodoListUiState.FilterState.NOT_COMPLETED)
+    }
 }
