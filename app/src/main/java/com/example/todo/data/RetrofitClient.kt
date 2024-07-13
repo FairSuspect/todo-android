@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 object RetrofitClient {
-    private const val BASE_URL = "https://beta.mrdekk.ru/todobackend"
+    private const val BASE_URL = "https://beta.mrdekk.ru/todobackend/"
     val todoApi: TodoApi by lazy {
     val authInterceptor = AuthInterceptor("Wrosdon")
         Retrofit.Builder()

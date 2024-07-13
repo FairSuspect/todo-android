@@ -1,9 +1,8 @@
 package com.example.todo.data
 
-import com.example.todo.di.modules.DatabaseScope
 import com.example.todo.domain.Todo
 import javax.inject.Inject
-@DatabaseScope
+
 class TodoLocalDataSource @Inject constructor(private val db: AppDatabase) : TodoDataSource {
 
 

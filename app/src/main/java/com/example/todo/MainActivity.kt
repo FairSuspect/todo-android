@@ -10,27 +10,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.todo.di.AppComponent
 import com.example.todo.ui.list.TodoListPage
 import com.example.todo.ui.theme.TodoTheme
 import com.example.todo.ui.viewmodels.TodosListViewModel
-import com.example.todo.ui.viewmodels.TodoViewModelFactory
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     //    fun Fragment.getAppComponent(): AppComponent =
 //        (requireContext() as TodoApplication).appComponent
-    @Inject
-    lateinit var viewModelFactory: TodoViewModelFactory
-    private val viewModel: TodosListViewModel by viewModels { viewModelFactory }
+
+    private val viewModel: TodosListViewModel by viewModels()
 
 
 
-    private fun getAppComponent(): AppComponent {
-        val todoApplication = application as TodoApplication
-
-        return todoApplication.appComponent
-    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

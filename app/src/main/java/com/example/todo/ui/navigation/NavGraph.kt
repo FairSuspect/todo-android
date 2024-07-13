@@ -9,6 +9,6 @@ import com.example.todo.ui.viewmodels.TodosListViewModel
 fun NavGraph(
     navController: NavHostController,
 ) {
-    val listViewModel: TodosListViewModel = viewModel(factory = TodosListViewModel.Factory)
+//    val listViewModel: TodosListViewModel = viewModel(factory = TodosListViewModel.Factory)
 
 }

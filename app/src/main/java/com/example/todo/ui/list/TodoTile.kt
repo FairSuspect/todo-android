@@ -1,5 +1,8 @@
 package com.example.todo.ui.list
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,24 +26,33 @@ import androidx.compose.ui.unit.dp
 import com.example.todo.domain.Todo
 import com.example.todo.ui.theme.TodoTheme
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TodoTile(todo: Todo, onDoneChanged: (done: Boolean) -> Unit, modifier: Modifier = Modifier) {
-        val iconColor = MaterialTheme.colorScheme.onSurface
-        Row(
-            modifier = modifier.padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Checkbox(checked = todo.done, onCheckedChange = onDoneChanged)
-            Text(todo.text)
-            Spacer(modifier = Modifier.weight(1f))
-            Icon(
-                imageVector = Icons.Outlined.Info,
-                contentDescription = null,
-                tint = iconColor,
-                modifier = Modifier.padding(start = 8.dp)
-            )
-        }
+fun TodoTile(
+    modifier: Modifier = Modifier,
+    todo: Todo,
+    onDoneChanged: (done: Boolean) -> Unit,
+    onDelete: () -> Unit = {},
+) {
+    val iconColor = MaterialTheme.colorScheme.onSurface
+    Row(
+        modifier = modifier
+            .padding(horizontal = 16.dp)
+            .clickable { onDoneChanged(!todo.done) }
+            .combinedClickable(onLongClick = onDelete, onClick = { onDoneChanged(!todo.done) }),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Checkbox(checked = todo.done, onCheckedChange = onDoneChanged)
+        Text(todo.text)
+        Spacer(modifier = Modifier.weight(1f))
+        Icon(
+            imageVector = Icons.Outlined.Info,
+            contentDescription = null,
+            tint = iconColor,
+            modifier = Modifier.padding(start = 8.dp)
+        )
+    }
 }
 
 

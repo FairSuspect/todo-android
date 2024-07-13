@@ -1,38 +1,48 @@
 package com.example.todo.data
 
+import android.util.Log
+import com.example.todo.di.modules.BackgroundOneThreadDispatcher
 import com.example.todo.domain.Todo
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class TodoRepositoryImpl @Inject constructor(
     private val localDataSource: TodoLocalDataSource,
-    private val remoteDataSource: TodoRemoteDataSource
-) : TodoRepository {
+    private val remoteDataSource: TodoRemoteDataSource,
+    @BackgroundOneThreadDispatcher private val dispatcher: CoroutineDispatcher,
 
-    override suspend fun createTodo(todo: Todo) {
+    ) : TodoRepository {
+
+    private val TAG = "TodoRepositoryImpl"
+
+    override suspend fun createTodo(todo: Todo) : Unit = withContext(dispatcher) {
         // Логика создания задачи, например:
         localDataSource.createTodo(todo)
 //        remoteDataSource.createTodo(todo)
     }
 
-    override suspend fun updateTodo(todo: Todo) {
+    override suspend fun updateTodo(todo: Todo) : Unit = withContext(dispatcher) {
         // Логика обновления задачи
         localDataSource.updateTodo(todo)
+        Log.d("TodoRepositoryImpl", "updateTodo: $todo")
 //        remoteDataSource.updateTodo(todo)
     }
 
-    override suspend fun deleteTodo(todo: Todo) {
+    override suspend fun deleteTodo(todo: Todo): Unit = withContext(dispatcher) {
         // Логика удаления задачи
         localDataSource.deleteTodo(todo)
 //        remoteDataSource.deleteTodo(todo)
     }
 
-    override suspend fun getAllTodos(): List<Todo> {
+    override suspend fun getAllTodos(): List<Todo>  = withContext(dispatcher){
 //        // Логика получения всех задач, например:
-        return try {
+         try {
             val remoteTodos = remoteDataSource.getAllTodos()
             localDataSource.updateAllTodos(remoteTodos) // Обновляем локальные данные
             remoteTodos
         } catch (e: Exception) {
+            Log.e(TAG, "getAllTodos: $e")
             val localTodos =
                 localDataSource.getAllTodos() // Возвращаем локальные данные в случае ошибки
             localTodos

@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
-
+    id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
 }
 
@@ -56,7 +56,6 @@ dependencies {
 
     implementation(libs.androidx.navigation.runtime.ktx)
     ksp(libs.androidx.room.compiler)
-    ksp (libs.dagger.compiler) // Dagger compiler
 
     implementation(libs.androidx.room.runtime)
     annotationProcessor(libs.androidx.room.compiler)
@@ -84,6 +83,9 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation(libs.dagger.compiler)
     implementation(libs.javax.inject)
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+
 }
+

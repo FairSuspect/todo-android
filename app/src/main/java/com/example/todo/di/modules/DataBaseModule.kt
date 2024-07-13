@@ -6,17 +6,23 @@ import com.example.todo.data.AppDatabase
 import com.example.todo.data.TodoLocalDataSource
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Scope
 import javax.inject.Singleton
 @Scope
 annotation class DatabaseScope
 
 @Module
+@InstallIn(
+    SingletonComponent::class
+)
 class DataBaseModule {
     companion object {
         @Provides
-        @DatabaseScope
-        fun provideAppDatabase(context: Context): AppDatabase {
+        @Singleton
+        fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
             return Room.databaseBuilder(
                 context,
                 AppDatabase::class.java,
@@ -25,7 +31,7 @@ class DataBaseModule {
         }
 
         @Provides
-        @DatabaseScope
+        @Singleton
         fun provideTodoLocalDataSource(db: AppDatabase): TodoLocalDataSource {
             return TodoLocalDataSource(db)
         }

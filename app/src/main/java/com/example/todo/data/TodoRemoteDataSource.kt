@@ -1,9 +1,8 @@
 package com.example.todo.data
 
-import com.example.todo.di.modules.RemoteScope
 import com.example.todo.domain.Todo
 import javax.inject.Inject
-@RemoteScope
+
 class TodoRemoteDataSource @Inject constructor() : TodoDataSource {
     override suspend fun createTodo(todo: Todo) {
         TODO("Not yet implemented")
