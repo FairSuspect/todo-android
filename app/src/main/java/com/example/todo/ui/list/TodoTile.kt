@@ -13,12 +13,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.todo.domain.Todo
@@ -33,24 +37,26 @@ fun TodoTile(
     onDelete: () -> Unit = {},
 ) {
     val iconColor = MaterialTheme.colorScheme.onSurface
-    Row(
-        modifier = modifier
-            .padding(horizontal = 16.dp)
-            .clickable { onDoneChanged(!todo.done) }
-            .combinedClickable(onLongClick = onDelete, onClick = { onDoneChanged(!todo.done) }),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Checkbox(checked = todo.done, onCheckedChange = onDoneChanged)
-        Text(todo.text)
-        Spacer(modifier = Modifier.weight(1f))
-        Icon(
-            imageVector = Icons.Outlined.Info,
-            contentDescription = null,
-            tint = iconColor,
-            modifier = Modifier.padding(start = 8.dp)
+    ListItem(headlineContent = {
+        Text(
+            todo.text, style = if (!todo.done) LocalTextStyle.current
+            else LocalTextStyle.current.copy(textDecoration = TextDecoration.LineThrough, color = MaterialTheme.colorScheme.onSurfaceVariant)
         )
-    }
+    },
+        leadingContent = { Checkbox(checked = todo.done, onCheckedChange = onDoneChanged) },
+        trailingContent = {
+            Icon(
+                imageVector = Icons.Outlined.Info,
+                contentDescription = null,
+                tint = iconColor,
+                modifier = Modifier.padding(start = 8.dp)
+            )
+        },
+        modifier = modifier.clickable { onDoneChanged(!todo.done) }
+
+    )
+
+
 }
 
 
