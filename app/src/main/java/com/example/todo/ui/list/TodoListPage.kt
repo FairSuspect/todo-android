@@ -63,7 +63,9 @@ fun TodoListPage(
                         )
                     }
                     item {
-                        AddTodoTile()
+                        AddTodoTile(
+                            onClick = { todoViewModel.createRandomTodo() }
+                        )
                     }
                 }
             }
