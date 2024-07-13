@@ -3,7 +3,6 @@ package com.example.todo.ui.viewmodels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todo.data.TodoRepository
 import com.example.todo.data.TodoRepositoryImpl
 import com.example.todo.domain.Todo
 import dagger.hilt.android.lifecycle.HiltViewModel

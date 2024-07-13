@@ -20,7 +20,6 @@ class MainActivity : ComponentActivity() {
     //    fun Fragment.getAppComponent(): AppComponent =
 //        (requireContext() as TodoApplication).appComponent
 
-    private val viewModel: TodosListViewModel by viewModels()
 
 
 

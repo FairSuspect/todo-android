@@ -2,7 +2,6 @@ package com.example.todo.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.todo.data.TodoRepository
 import com.example.todo.data.TodoRepositoryImpl
 import javax.inject.Inject
 

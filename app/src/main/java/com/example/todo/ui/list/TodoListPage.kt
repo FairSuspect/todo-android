@@ -6,7 +6,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Error
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -17,15 +16,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.todo.ui.viewmodels.TodosListViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.todo.ui.viewmodels.TodoListUiState
-import androidx.compose.runtime.getValue
-import com.example.todo.data.AppDatabase
-import com.example.todo.data.TodoLocalDataSource
-import com.example.todo.data.TodoRepositoryImpl
+import com.example.todo.ui.viewmodels.TodosListViewModel
 
 @Composable
 fun TodoListPage(
@@ -33,13 +29,6 @@ fun TodoListPage(
     todoViewModel: TodosListViewModel = viewModel(),
 ) {
     val uiState by todoViewModel.uiState.collectAsState()
-//    val todos = listOf(
-//        Todo(id = "123", text = "Купить пива", done = false),
-//        Todo(id = "1234", text = "Купить чипсов", done = true),
-//        Todo(id = "12345", text = "Оплатить интернет", done = true),
-//        Todo(id = "123456", text = "Сделать РВП", done = false),
-//    )
-
     Scaffold(
         topBar = { AppBar() },
         floatingActionButton = {
