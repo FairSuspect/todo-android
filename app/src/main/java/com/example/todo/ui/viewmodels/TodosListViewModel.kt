@@ -8,6 +8,7 @@ import com.example.todo.domain.Todo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -58,7 +59,7 @@ class TodosListViewModel @Inject constructor(private val todoRepository: TodoRep
         }
     }
 
-   private fun updateTodo(todo: Todo) {
+    private fun updateTodo(todo: Todo) {
         viewModelScope.launch {
             try {
                 todoRepository.updateTodo(todo)
@@ -73,21 +74,24 @@ class TodosListViewModel @Inject constructor(private val todoRepository: TodoRep
             }
         }
     }
-    fun onChecked(todo: Todo, checked: Boolean){
-        val newTodo = todo.copy(done = checked, changeAt =  LocalDateTime.now(ZoneId.of("UTC")))
+
+    fun onChecked(todo: Todo, checked: Boolean) {
+        val newTodo = todo.copy(done = checked, changeAt = LocalDateTime.now(ZoneId.of("UTC")))
         updateTodo(newTodo)
     }
 
-    fun deleteTodo(todo: Todo){
+    fun deleteTodo(todo: Todo) {
         Log.d(TAG, "deleteTodo: $todo")
         viewModelScope.launch {
             try {
                 todoRepository.deleteTodo(todo)
-                val todos = (_uiState.value as TodoListUiState.Loaded).todos
-                val updatedTodos = todos.filter { it.id != todo.id }
-                _uiState.value = TodoListUiState.Loaded(updatedTodos)
-            }
-            catch (e: Exception) {
+                _uiState.update { state ->
+                    var todos = (state as TodoListUiState.Loaded).todos
+                    todos = todos.filter { it.id != todo.id }
+                    TodoListUiState.Loaded(todos)
+                }
+
+            } catch (e: Exception) {
                 val message = "Не удалось удалить задачу: ${e.message}"
                 Log.e(TAG, message)
             }
@@ -95,10 +99,11 @@ class TodosListViewModel @Inject constructor(private val todoRepository: TodoRep
     }
 
     fun onVisibilityChanged(visible: Boolean) {
-        if(_uiState.value !is TodoListUiState.Loaded)
+        if (_uiState.value !is TodoListUiState.Loaded)
             return
         val loadedState = _uiState.value as TodoListUiState.Loaded
 
-        _uiState.value = loadedState.copy(filterState = if(visible) TodoListUiState.FilterState.ALL else TodoListUiState.FilterState.NOT_COMPLETED)
+        _uiState.value =
+            loadedState.copy(filterState = if (visible) TodoListUiState.FilterState.ALL else TodoListUiState.FilterState.NOT_COMPLETED)
     }
 }

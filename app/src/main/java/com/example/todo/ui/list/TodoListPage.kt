@@ -63,7 +63,15 @@ fun TodoListPage(
                         innerPadding
                     )
                 ) {
-                    items(filteredTodos.size) { index ->
+                    items(
+                        filteredTodos.size,
+                        key = { index ->
+                            filteredTodos[index].id
+                        }
+                    )
+                    {
+
+                            index ->
                         val todo = filteredTodos[index]
                         TodoTile(todo = todo,
                             onDoneChanged = {
