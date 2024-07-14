@@ -82,7 +82,9 @@ class TodosListViewModel @Inject constructor(private val todoRepository: TodoRep
                 val updatedTodos = todos.map {
                     if (it.id == todo.id) todo else it
                 }
-                _uiState.value = TodoListUiState.Loaded(updatedTodos)
+                _uiState.update {
+                    (it as TodoListUiState.Loaded).copy(todos = updatedTodos)
+                }
             } catch (e: Exception) {
                 val message = "Не удалось обновить задачу: ${e.message}"
                 Log.e(TAG, message)
