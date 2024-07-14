@@ -1,5 +1,6 @@
 package com.example.todo.ui.list
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,6 +24,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.todo.ui.viewmodels.TodoListUiState
 import com.example.todo.ui.viewmodels.TodosListViewModel
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TodoListPage(
     modifier: Modifier = Modifier,
@@ -73,7 +75,9 @@ fun TodoListPage(
 
                             index ->
                         val todo = filteredTodos[index]
-                        TodoTile(todo = todo,
+                        TodoTile(
+                            modifier = Modifier.animateItemPlacement(),
+                            todo = todo,
                             onDoneChanged = {
                                 todoViewModel.onChecked(todo, it)
                             },

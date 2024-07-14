@@ -59,7 +59,9 @@ fun TodoTile(
         modifier = modifier,
         backgroundContent = { TodoDismissBackground(dismissState = dismissState) },
         content = {
-            ListItem(headlineContent = {
+            ListItem(
+
+                headlineContent = {
                 Text(
                     todo.text, style = if (!todo.done) LocalTextStyle.current
                     else LocalTextStyle.current.copy(
