@@ -48,7 +48,6 @@ fun TodoListPage(
             })
         },
     ) { innerPadding ->
-
         when (uiState) {
             is TodoListUiState.Loading -> {
                 // Показать индикатор загрузки
@@ -71,9 +70,7 @@ fun TodoListPage(
                             filteredTodos[index].id
                         }
                     )
-                    {
-
-                            index ->
+                    { index ->
                         val todo = filteredTodos[index]
                         TodoTile(
                             modifier = Modifier.animateItemPlacement(),
@@ -88,7 +85,7 @@ fun TodoListPage(
                     }
                     item {
                         AddTodoTile(
-                            onClick = { todoViewModel.createRandomTodo() }
+                            onDone = { todoViewModel.createTodoWithText(it) },
                         )
                     }
                 }

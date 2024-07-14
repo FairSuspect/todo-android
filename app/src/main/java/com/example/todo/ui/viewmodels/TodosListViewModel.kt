@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.ZoneId
+import java.util.UUID
 import javax.inject.Inject
 
 val TAG = "TodosListViewModel"
@@ -46,17 +47,31 @@ class TodosListViewModel @Inject constructor(private val todoRepository: TodoRep
         val randomTodo =
             Todo(id = randomTodoId.toString(), text = "Random Todo: $randomTodoId", done = false)
 
+        createTodo(randomTodo)
+    }
+
+    private fun createTodo(todo: Todo) {
         viewModelScope.launch {
             try {
-                todoRepository.createTodo(randomTodo)
+                todoRepository.createTodo(todo)
                 val todos = (_uiState.value as TodoListUiState.Loaded).todos
-                _uiState.value = TodoListUiState.Loaded(todos + randomTodo)
+                _uiState.value = TodoListUiState.Loaded(todos + todo)
             } catch (e: Exception) {
                 val message = "Не удалось создать задачу: ${e.message}"
                 Log.e(TAG, message)
 
             }
         }
+    }
+
+    fun createTodoWithText(text: String) {
+        // Создаётся задача с id сгенерированным uuid, text и done false
+        val todo = Todo(id = generateId(), text = text, done = false)
+        createTodo(todo)
+
+    }
+    private fun generateId(): String {
+        return  UUID.randomUUID().toString()
     }
 
     private fun updateTodo(todo: Todo) {
