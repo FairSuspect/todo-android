@@ -4,15 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.todo.ui.list.TodoListPage
+import androidx.navigation.compose.rememberNavController
+import com.example.todo.ui.navigation.NavGraph
 import com.example.todo.ui.theme.TodoTheme
-import com.example.todo.ui.viewmodels.TodosListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -40,10 +38,18 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             TodoTheme {
-                TodoListPage(modifier = Modifier.fillMaxSize())
+                TodoApp()
             }
         }
     }
+}
+
+@Composable
+fun TodoApp(modifier: Modifier = Modifier) {
+    val navController = rememberNavController()
+    NavGraph(
+        navController = navController,
+    )
 }
 
 @Composable

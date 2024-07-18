@@ -3,6 +3,7 @@ package com.example.todo.data
 import android.util.Log
 import com.example.todo.di.modules.BackgroundOneThreadDispatcher
 import com.example.todo.domain.Todo
+import com.example.todo.domain.TodoId
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -49,12 +50,14 @@ class TodoRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getTodo(id: String): Todo {
+    override suspend fun getTodo(id: TodoId): Todo = withContext(dispatcher){
         // Логика получения задачи по id, например:
-        return try {
+         try {
             remoteDataSource.getTodo(id)
         } catch (e: Exception) {
             localDataSource.getTodo(id)
         }
     }
+
+
 }

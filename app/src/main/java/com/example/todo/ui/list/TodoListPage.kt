@@ -19,8 +19,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.todo.ui.viewmodels.TodoListUiState
 import com.example.todo.ui.viewmodels.TodosListViewModel
 
@@ -29,6 +31,7 @@ import com.example.todo.ui.viewmodels.TodosListViewModel
 fun TodoListPage(
     modifier: Modifier = Modifier,
     todoViewModel: TodosListViewModel = viewModel(),
+    navController: NavController,
 ) {
     val uiState by todoViewModel.uiState.collectAsState()
     val doneTasks = (uiState as? TodoListUiState.Loaded)?.todos?.count { it.done } ?: 0
@@ -80,6 +83,9 @@ fun TodoListPage(
                             },
                             onDelete = {
                                 todoViewModel.deleteTodo(todo)
+                            },
+                            onClick = {
+                                navController.navigate("detail/${todo.id}")
                             }
                         )
                     }
@@ -143,6 +149,8 @@ fun AppBar(
 @Preview
 @Composable
 private fun TodoListPagePreview() {
-    TodoListPage()
+    TodoListPage(
+        navController = NavController(LocalContext.current)
+    )
 }
 

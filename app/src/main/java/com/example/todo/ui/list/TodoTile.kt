@@ -32,6 +32,7 @@ fun TodoTile(
     todo: Todo,
     onDoneChanged: (done: Boolean) -> Unit,
     onDelete: () -> Unit = {},
+    onClick: () -> Unit = {},
 ) {
     val iconColor = MaterialTheme.colorScheme.onSurface
 
@@ -60,7 +61,6 @@ fun TodoTile(
         backgroundContent = { TodoDismissBackground(dismissState = dismissState) },
         content = {
             ListItem(
-
                 headlineContent = {
                 Text(
                     todo.text, style = if (!todo.done) LocalTextStyle.current
@@ -79,7 +79,7 @@ fun TodoTile(
                         modifier = Modifier.padding(start = 8.dp)
                     )
                 },
-                modifier = modifier.clickable { onDoneChanged(!todo.done) }
+                modifier = modifier.clickable { onClick() }
 
             )
         }

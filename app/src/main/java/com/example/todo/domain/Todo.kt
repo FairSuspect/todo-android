@@ -25,4 +25,8 @@ data class Todo(
     val lastUpdatedBy: String? = null,
     @ColumnInfo(name = "deadline")
     val deadline: LocalDateTime? = null,
-)
+) {
+    companion object {
+        val empty = Todo(id = "", text = "", done = false)
+    }
+}

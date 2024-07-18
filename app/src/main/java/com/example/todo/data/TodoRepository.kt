@@ -1,6 +1,7 @@
 package com.example.todo.data
 
 import com.example.todo.domain.Todo
+import com.example.todo.domain.TodoId
 
 interface  TodoRepository {
     suspend fun createTodo(todo: Todo)
@@ -11,5 +12,6 @@ interface  TodoRepository {
 
     suspend fun  getAllTodos(): List<Todo>
 
-    suspend fun getTodo(id: String): Todo
+    suspend fun getTodo(id: TodoId): Todo
+
 }

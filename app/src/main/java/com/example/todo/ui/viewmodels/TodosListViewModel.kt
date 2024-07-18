@@ -70,8 +70,9 @@ class TodosListViewModel @Inject constructor(private val todoRepository: TodoRep
         createTodo(todo)
 
     }
+
     private fun generateId(): String {
-        return  UUID.randomUUID().toString()
+        return UUID.randomUUID().toString()
     }
 
     private fun updateTodo(todo: Todo) {
@@ -123,4 +124,6 @@ class TodosListViewModel @Inject constructor(private val todoRepository: TodoRep
         _uiState.value =
             loadedState.copy(filterState = if (visible) TodoListUiState.FilterState.ALL else TodoListUiState.FilterState.NOT_COMPLETED)
     }
+
+
 }
