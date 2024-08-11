@@ -21,4 +21,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "Todo"
 include(":app")
- 

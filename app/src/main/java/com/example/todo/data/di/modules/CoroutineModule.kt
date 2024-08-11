@@ -1,9 +1,7 @@
-package com.example.todo.di.modules
+package com.example.todo.data.di.modules
 
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -16,7 +14,6 @@ annotation class BackgroundDispatcher
 annotation class BackgroundOneThreadDispatcher
 
 @Module
-@InstallIn(SingletonComponent::class)
 interface CoroutineModule {
     companion object {
         @Provides

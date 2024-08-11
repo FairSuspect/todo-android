@@ -1,7 +1,7 @@
 package com.example.todo.data
 
 import android.util.Log
-import com.example.todo.di.modules.BackgroundOneThreadDispatcher
+import com.example.todo.data.di.modules.BackgroundOneThreadDispatcher
 import com.example.todo.domain.Todo
 import com.example.todo.domain.TodoId
 import kotlinx.coroutines.CoroutineDispatcher
