@@ -6,12 +6,17 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todo.data.TodoRepositoryImpl
 import com.example.todo.domain.Todo
 import com.example.todo.notifications.NotificationReceiver
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.logEvent
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,9 +46,10 @@ class TodosListViewModel @Inject constructor(
     ViewModel() {
     private val _uiState = MutableStateFlow<TodoListUiState>(TodoListUiState.Loading)
     val uiState = _uiState.asStateFlow()
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     // ... логика вашего ViewModel, например:
-     fun getTodos() {
+    fun getTodos() {
         viewModelScope.launch {
             _uiState.value = TodoListUiState.Loading
             try {
@@ -58,6 +64,7 @@ class TodosListViewModel @Inject constructor(
     }
 
     init {
+        firebaseAnalytics = Firebase.analytics
         getTodos() // Загрузка данных при создании ViewModel
     }
 
@@ -81,6 +88,8 @@ class TodosListViewModel @Inject constructor(
                 todoRepository.createTodo(todo)
                 val todos = (_uiState.value as TodoListUiState.Loaded).todos
                 _uiState.value = TodoListUiState.Loaded(todos + todo)
+                firebaseAnalytics.logEvent("todo_create") {}
+
                 createNotificationChannel()
                 if (todo.deadline != null) {
                     val calendar = Calendar.getInstance()
@@ -163,52 +172,60 @@ class TodosListViewModel @Inject constructor(
 
 
     private fun updateTodo(todo: Todo) {
-    viewModelScope.launch {
-        try {
-            todoRepository.updateTodo(todo)
-            val todos = (_uiState.value as TodoListUiState.Loaded).todos
-            val updatedTodos = todos.map {
-                if (it.id == todo.id) todo else it
+        viewModelScope.launch {
+            try {
+                todoRepository.updateTodo(todo)
+                val todos = (_uiState.value as TodoListUiState.Loaded).todos
+                val updatedTodos = todos.map {
+                    if (it.id == todo.id) todo else it
+                }
+                _uiState.update {
+                    (it as TodoListUiState.Loaded).copy(todos = updatedTodos)
+                }
+                firebaseAnalytics.logEvent("todo_update") {}
+
+            } catch (e: Exception) {
+                val message = "Не удалось обновить задачу: ${e.message}"
+                Log.e(TAG, message)
             }
-            _uiState.update {
-                (it as TodoListUiState.Loaded).copy(todos = updatedTodos)
-            }
-        } catch (e: Exception) {
-            val message = "Не удалось обновить задачу: ${e.message}"
-            Log.e(TAG, message)
         }
     }
-}
 
-fun onChecked(todo: Todo, checked: Boolean) {
-    val newTodo = todo.copy(done = checked, changeAt = LocalDateTime.now(ZoneId.of("UTC")))
-    updateTodo(newTodo)
-}
+    fun onChecked(todo: Todo, checked: Boolean) {
+        val newTodo = todo.copy(done = checked, changeAt = LocalDateTime.now(ZoneId.of("UTC")))
+        updateTodo(newTodo)
+    }
 
-fun deleteTodo(todo: Todo) {
-    Log.d(TAG, "deleteTodo: $todo")
-    viewModelScope.launch {
-        try {
-            todoRepository.deleteTodo(todo)
-            _uiState.update { state ->
-                var todos = (state as TodoListUiState.Loaded).todos
-                todos = todos.filter { it.id != todo.id }
-                TodoListUiState.Loaded(todos)
+    fun deleteTodo(todo: Todo) {
+        Log.d(TAG, "deleteTodo: $todo")
+        viewModelScope.launch {
+            try {
+                todoRepository.deleteTodo(todo)
+                _uiState.update { state ->
+                    var todos = (state as TodoListUiState.Loaded).todos
+                    todos = todos.filter { it.id != todo.id }
+                    TodoListUiState.Loaded(todos)
+                }
+                firebaseAnalytics.logEvent("todo_delete") {}
+
+            } catch (e: Exception) {
+                val message = "Не удалось удалить задачу: ${e.message}"
+                Log.e(TAG, message)
             }
-
-        } catch (e: Exception) {
-            val message = "Не удалось удалить задачу: ${e.message}"
-            Log.e(TAG, message)
         }
     }
-}
 
-fun onVisibilityChanged(visible: Boolean) {
-    if (_uiState.value !is TodoListUiState.Loaded)
-        return
-    val loadedState = _uiState.value as TodoListUiState.Loaded
+    fun onVisibilityChanged(visible: Boolean) {
+        if (_uiState.value !is TodoListUiState.Loaded)
+            return
+        val loadedState = _uiState.value as TodoListUiState.Loaded
 
-    _uiState.value =
-        loadedState.copy(filterState = if (visible) TodoListUiState.FilterState.ALL else TodoListUiState.FilterState.NOT_COMPLETED)
-}
+        _uiState.value =
+            loadedState.copy(filterState = if (visible) TodoListUiState.FilterState.ALL else TodoListUiState.FilterState.NOT_COMPLETED)
+        firebaseAnalytics.logEvent("todo_filter",
+            Bundle().apply {
+                this.putString("filter", if (visible) "all" else "not_completed")
+            }
+        )
+    }
 }

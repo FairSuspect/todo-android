@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.todo.ui.viewmodels.TodoListUiState
 import com.example.todo.ui.viewmodels.TodosListViewModel
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -45,6 +46,7 @@ fun TodoListPage(
         floatingActionButton = {
             AddTodoFAB(onClick = {
                 todoViewModel.createRandomTodo()
+                FirebaseCrashlytics.getInstance().recordException(Exception("Random todo should not be created"))
             })
         },
     ) { innerPadding ->

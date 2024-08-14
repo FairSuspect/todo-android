@@ -13,13 +13,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.todo.ui.list.TodoListPage
 import com.example.todo.ui.theme.TodoTheme
 import com.example.todo.ui.viewmodels.TodosListViewModel
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    //    fun Fragment.getAppComponent(): AppComponent =
-//        (requireContext() as TodoApplication).appComponent
 
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
 
 
@@ -28,7 +30,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
+        firebaseAnalytics = Firebase.analytics
 //        val db = Room.databaseBuilder(
 //            applicationContext,
 //            AppDatabase::class.java,
