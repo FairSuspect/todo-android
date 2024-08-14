@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.todo.domain.Todo
 import com.example.todo.ui.theme.TodoTheme
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,6 +71,11 @@ fun TodoTile(
                     )
                 )
             },
+                supportingContent = {
+                    if (todo.deadline != null) {
+                        Text(todo.deadline.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")))
+                    }
+                },
                 leadingContent = { Checkbox(checked = todo.done, onCheckedChange = onDoneChanged) },
                 trailingContent = {
                     Icon(
