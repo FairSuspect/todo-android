@@ -1,16 +1,19 @@
 package com.example.todo.data
 
+import com.example.todo.di.models.BaseUrlProvider
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
 
-object RetrofitClient {
-    private const val BASE_URL = "https://beta.mrdekk.ru/todobackend/"
+class RetrofitClient @Inject constructor(
+    private val baseUrlProvider: BaseUrlProvider
+) {
     val todoApi: TodoApi by lazy {
-    val authInterceptor = AuthInterceptor("Wrosdon")
+        val authInterceptor = AuthInterceptor("Wrosdon")
         Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(baseUrlProvider.getBaseUrl()) // Use injected provider
             .addConverterFactory(GsonConverterFactory.create())
             .client(
                 OkHttpClient.Builder()

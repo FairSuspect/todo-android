@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<defaults>
+  <entry>
+    <key>base_url</key>
+    <value>https://beta.mrdekk.ru/todobackend/</value>
+  </entry>
+  <entry>
+    <key>background</key>
+    <value>0xFFF7F6F2</value>
+  </entry>
+  <entry>
+    <key>importance_color</key>
+    <value />
+  </entry>
+</defaults>

@@ -16,6 +16,9 @@ import com.example.todo.ui.viewmodels.TodosListViewModel
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -30,7 +33,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        firebaseAnalytics = Firebase.analytics
+        initializeFirebaseServices()
 //        val db = Room.databaseBuilder(
 //            applicationContext,
 //            AppDatabase::class.java,
@@ -45,6 +48,22 @@ class MainActivity : ComponentActivity() {
                 TodoListPage(modifier = Modifier.fillMaxSize())
             }
         }
+    }
+
+    private fun initializeFirebaseServices() {
+        firebaseAnalytics = Firebase.analytics
+        initializeRemoteConfig()
+    }
+
+    private fun initializeRemoteConfig() {
+        val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig
+        val configSettings = remoteConfigSettings {
+            minimumFetchIntervalInSeconds = 1
+        }
+        remoteConfig.setConfigSettingsAsync(configSettings)
+        remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
+        remoteConfig.fetchAndActivate()
+
     }
 }
 
