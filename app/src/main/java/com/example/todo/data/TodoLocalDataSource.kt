@@ -27,7 +27,8 @@ class TodoLocalDataSource @Inject constructor(private val db: AppDatabase) : Tod
     }
 
     override suspend fun updateAllTodos(remoteTodos: List<Todo>) {
-        TODO("Not yet implemented")
+
+        return db.todoDao().updateAllTodos(remoteTodos)
     }
 
 }

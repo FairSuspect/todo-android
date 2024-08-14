@@ -23,4 +23,7 @@ interface TodoDao  {
     @Delete
     fun deleteTodo(todo: Todo)
 
+    @Insert
+    fun updateAllTodos(todos: List<Todo>)
+
 }

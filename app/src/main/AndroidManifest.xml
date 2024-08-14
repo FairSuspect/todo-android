@@ -14,7 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Todo"
+        android:usesCleartextTraffic="true"
+
         tools:targetApi="31">
+        <!-- Для работы http в локальной сети переключил android:usesCleartextTraffic="true"-->
         <activity
             android:name=".MainActivity"
             android:exported="true"
