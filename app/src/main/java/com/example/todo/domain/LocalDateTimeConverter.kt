@@ -3,9 +3,8 @@ package com.example.todo.domain
 import androidx.room.TypeConverter
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-
 object LocalDateTimeConverter {
-    private val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
+    private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX")
 
     @TypeConverter
     fun toLocalDateTime(value: String?): LocalDateTime? {

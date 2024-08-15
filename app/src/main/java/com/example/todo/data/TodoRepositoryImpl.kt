@@ -17,6 +17,7 @@ class TodoRepositoryImpl @Inject constructor(
     private val TAG = "TodoRepositoryImpl"
 
     override suspend fun createTodo(todo: Todo) : Unit = withContext(dispatcher) {
+        remoteDataSource.createTodo(todo)
         // Логика создания задачи, например:
         localDataSource.createTodo(todo)
 //        remoteDataSource.createTodo(todo)

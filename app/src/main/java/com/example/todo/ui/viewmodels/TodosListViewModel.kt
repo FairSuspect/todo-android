@@ -46,7 +46,7 @@ class TodosListViewModel @Inject constructor(
     ViewModel() {
     private val _uiState = MutableStateFlow<TodoListUiState>(TodoListUiState.Loading)
     val uiState = _uiState.asStateFlow()
-    private lateinit var firebaseAnalytics: FirebaseAnalytics
+    private var firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
 
     // ... логика вашего ViewModel, например:
     fun getTodos() {
@@ -64,19 +64,18 @@ class TodosListViewModel @Inject constructor(
     }
 
     init {
-        firebaseAnalytics = Firebase.analytics
         getTodos() // Загрузка данных при создании ViewModel
     }
 
     fun createRandomTodo() {
         val randomTodoId = (1..100000).random()
-        val deadline = LocalDateTime.now().plusMinutes(1)
+//        val deadline = LocalDateTime.now().plusMinutes(1)
         val randomTodo =
             Todo(
                 id = randomTodoId.toString(),
                 text = "Random Todo: $randomTodoId",
                 done = false,
-                deadline = deadline
+//                deadline = deadline
             )
 
         createTodo(randomTodo)

@@ -6,12 +6,12 @@ import javax.inject.Inject
 class TodoLocalDataSource @Inject constructor(private val db: AppDatabase) : TodoDataSource {
 
 
-    override suspend fun createTodo(todo: Todo) {
-        return db.todoDao().createTodo(todo)
+    override suspend fun createTodo(todo: Todo) :Todo {
+        return db.todoDao().createTodo(todo).let { todo }
     }
 
-    override suspend fun updateTodo(todo: Todo) {
-        return db.todoDao().updateTodo(todo)
+    override suspend fun updateTodo(todo: Todo) : Todo {
+        return db.todoDao().updateTodo(todo).let { todo }
     }
 
     override suspend fun deleteTodo(todo: Todo) {
