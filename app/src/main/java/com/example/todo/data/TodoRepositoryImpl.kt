@@ -16,14 +16,14 @@ class TodoRepositoryImpl @Inject constructor(
 
     private val TAG = "TodoRepositoryImpl"
 
-    override suspend fun createTodo(todo: Todo) : Unit = withContext(dispatcher) {
+    override suspend fun createTodo(todo: Todo): Unit = withContext(dispatcher) {
         remoteDataSource.createTodo(todo)
         // Логика создания задачи, например:
         localDataSource.createTodo(todo)
 //        remoteDataSource.createTodo(todo)
     }
 
-    override suspend fun updateTodo(todo: Todo) : Unit = withContext(dispatcher) {
+    override suspend fun updateTodo(todo: Todo): Unit = withContext(dispatcher) {
         // Логика обновления задачи
         localDataSource.updateTodo(todo)
         Log.d("TodoRepositoryImpl", "updateTodo: $todo")
@@ -32,22 +32,28 @@ class TodoRepositoryImpl @Inject constructor(
 
     override suspend fun deleteTodo(todo: Todo): Unit = withContext(dispatcher) {
         // Логика удаления задачи
+        remoteDataSource.deleteTodo(todo)
         localDataSource.deleteTodo(todo)
 //        remoteDataSource.deleteTodo(todo)
     }
 
-    override suspend fun getAllTodos(): List<Todo>  = withContext(dispatcher){
+    override suspend fun getAllTodos(): List<Todo> = withContext(dispatcher) {
 //        // Логика получения всех задач, например:
-         try {
+        try {
             val remoteTodos = remoteDataSource.getAllTodos()
-            localDataSource.updateAllTodos(remoteTodos) // Обновляем локальные данные
-            remoteTodos
+            try {
+                localDataSource.updateAllTodos(remoteTodos) // Обновляем локальные данные
+            } catch (e: Exception) {
+                Log.e(TAG, "updateAllTodos: $e")
+            }
+             remoteTodos
         } catch (e: Exception) {
             Log.e(TAG, "getAllTodos: $e")
             val localTodos =
                 localDataSource.getAllTodos() // Возвращаем локальные данные в случае ошибки
             localTodos
         }
+
     }
 
     override suspend fun getTodo(id: String): Todo {

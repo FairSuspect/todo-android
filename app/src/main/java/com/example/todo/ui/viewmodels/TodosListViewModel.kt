@@ -69,13 +69,13 @@ class TodosListViewModel @Inject constructor(
 
     fun createRandomTodo() {
         val randomTodoId = (1..100000).random()
-//        val deadline = LocalDateTime.now().plusMinutes(1)
+        val deadline = LocalDateTime.now().plusMinutes(1)
         val randomTodo =
             Todo(
                 id = randomTodoId.toString(),
                 text = "Random Todo: $randomTodoId",
                 done = false,
-//                deadline = deadline
+                deadline = deadline
             )
 
         createTodo(randomTodo)

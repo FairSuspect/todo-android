@@ -2,6 +2,7 @@ package com.example.todo.data
 
 import android.util.Log
 import com.example.todo.domain.Todo
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import javax.inject.Inject
 
 class TodoRemoteDataSource @Inject constructor(
@@ -17,11 +18,18 @@ class TodoRemoteDataSource @Inject constructor(
     }
 
     override suspend fun deleteTodo(todo: Todo) {
-        TODO("Not yet implemented")
+        return retrofitClient.todoApi.deleteTodo(todo.id)
     }
 
     override suspend fun getAllTodos(): List<Todo> {
+        try {
+
         return retrofitClient.todoApi.getTodos()
+        } catch (e: Exception) {
+            FirebaseCrashlytics.getInstance().recordException(e)
+            Log.e("TodoRemoteDataSource", "Error getting todos", e)
+            throw e
+        }
     }
 
     override suspend fun getTodo(id: String): Todo {

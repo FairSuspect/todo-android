@@ -7,7 +7,7 @@ import com.example.todo.domain.LocalDateTimeConverter
 import com.example.todo.domain.Todo
 import com.example.todo.domain.TodoDao
 
-@Database(entities = [Todo::class], version = 1)
+@Database(entities = [Todo::class], version = 1, exportSchema = false)
 @TypeConverters(LocalDateTimeConverter::class)
 
 abstract class AppDatabase : RoomDatabase() {
