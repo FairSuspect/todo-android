@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Todo</string>
+    <string name="createTask">Create task</string>
+    <string name="newTask">New Task</string>
+    <string name="myTasks">My Tasks</string>
+    <string name="done">Done - %1$s</string>
+</resources>

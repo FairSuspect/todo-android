@@ -13,7 +13,9 @@ plugins {
 android {
     namespace = "com.example.todo"
     compileSdk = 34
-
+    androidResources {
+        generateLocaleConfig = true
+    }
     defaultConfig {
         applicationId = "com.example.todo.android"
         minSdk = 26
