@@ -17,10 +17,11 @@ class TodoRepositoryImpl @Inject constructor(
     private val TAG = "TodoRepositoryImpl"
 
     override suspend fun createTodo(todo: Todo): Unit = withContext(dispatcher) {
-        remoteDataSource.createTodo(todo)
-        // Логика создания задачи, например:
-        localDataSource.createTodo(todo)
-//        remoteDataSource.createTodo(todo)
+        try {
+            remoteDataSource.createTodo(todo)
+        } catch (_: Exception) {
+            localDataSource.createTodo(todo)
+        }
     }
 
     override suspend fun updateTodo(todo: Todo): Unit = withContext(dispatcher) {
@@ -32,7 +33,12 @@ class TodoRepositoryImpl @Inject constructor(
 
     override suspend fun deleteTodo(todo: Todo): Unit = withContext(dispatcher) {
         // Логика удаления задачи
+        try {
+
         remoteDataSource.deleteTodo(todo)
+        } catch (e: Exception) {
+            Log.d("TodoRepositoryImpl", "deleteTodo: $e")
+        }
         localDataSource.deleteTodo(todo)
 //        remoteDataSource.deleteTodo(todo)
     }
@@ -46,7 +52,7 @@ class TodoRepositoryImpl @Inject constructor(
             } catch (e: Exception) {
                 Log.e(TAG, "updateAllTodos: $e")
             }
-             remoteTodos
+            remoteTodos
         } catch (e: Exception) {
             Log.e(TAG, "getAllTodos: $e")
             val localTodos =
@@ -60,7 +66,7 @@ class TodoRepositoryImpl @Inject constructor(
         // Логика получения задачи по id, например:
         return try {
             remoteDataSource.getTodo(id)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             localDataSource.getTodo(id)
         }
     }
